@@ -10,13 +10,13 @@
         "json-ld",
         "open-graph"
     ],
-    "homepage": "https://github.com/avenra/metadatax",
+    "homepage": "https://github.com/DevSam7t3/metadatax",
     "bugs": {
-        "url": "https://github.com/avenra/metadatax/issues"
+        "url": "https://github.com/DevSam7t3/metadatax/issues"
     },
     "repository": {
         "type": "git",
-        "url": "git+https://github.com/avenra/metadatax.git"
+        "url": "git+https://github.com/DevSam7t3/metadatax.git"
     },
     "license": "MIT",
     "type": "module",
