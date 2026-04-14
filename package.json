@@ -1,0 +1,62 @@
+{
+    "name": "@avenra/metadatax",
+    "version": "0.1.0",
+    "description": "Lightweight metadata and SEO manager for React and Next.js",
+    "keywords": [
+        "seo",
+        "metadata",
+        "nextjs",
+        "react",
+        "json-ld",
+        "open-graph"
+    ],
+    "homepage": "https://github.com/avenra/metadatax",
+    "bugs": {
+        "url": "https://github.com/avenra/metadatax/issues"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/avenra/metadatax.git"
+    },
+    "license": "MIT",
+    "type": "module",
+    "sideEffects": false,
+    "engines": {
+        "node": ">=20"
+    },
+    "main": "./dist/index.js",
+    "types": "./dist/index.d.ts",
+    "exports": {
+        ".": {
+            "types": "./dist/index.d.ts",
+            "import": "./dist/index.js"
+        },
+        "./pages": {
+            "types": "./dist/pages.d.ts",
+            "import": "./dist/pages.js"
+        },
+        "./package.json": {
+            "default": "./package.json"
+        }
+    },
+    "files": [
+        "dist"
+    ],
+    "scripts": {
+        "build": "tsc -p tsconfig.json",
+        "test": "vitest run",
+        "test:watch": "vitest",
+        "prepublishOnly": "npm test && npm run build"
+    },
+    "publishConfig": {
+        "access": "public"
+    },
+    "peerDependencies": {
+        "react": ">=18"
+    },
+    "devDependencies": {
+        "@types/react": "^18.3.12",
+        "typescript": "^5.7.2",
+        "vitest": "^2.1.9"
+    }
+}
