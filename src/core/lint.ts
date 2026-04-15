@@ -28,12 +28,29 @@ export function validateMeta(
     const findings: LintIssue[] = [];
     const level = pickLevel(lint);
 
-    if (!resolved.canonical) {
+    if (!resolved.title) {
+        findings.push(
+            issue(level, "missing_title", "Missing title", ctx.routeKey),
+        );
+    }
+
+    if (!resolved.description) {
         findings.push(
             issue(
                 level,
-                "missing_canonical",
-                "Missing canonical URL",
+                "missing_description",
+                "Missing description",
+                ctx.routeKey,
+            ),
+        );
+    }
+
+    if (!resolved.openGraph) {
+        findings.push(
+            issue(
+                level,
+                "missing_opengraph",
+                "Missing Open Graph metadata",
                 ctx.routeKey,
             ),
         );
@@ -45,6 +62,17 @@ export function validateMeta(
                 level,
                 "missing_og_image",
                 "Open Graph image is missing",
+                ctx.routeKey,
+            ),
+        );
+    }
+
+    if (!resolved.canonical) {
+        findings.push(
+            issue(
+                level,
+                "missing_canonical",
+                "Missing canonical URL",
                 ctx.routeKey,
             ),
         );

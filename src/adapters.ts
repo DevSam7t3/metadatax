@@ -30,7 +30,28 @@ export function createMetadata(
     input: MetaInput = {},
     context: ResolveContext = {},
 ): NextMetadataLike {
-    const { resolved } = createResolvedMeta(input, context, defaults);
+    const { resolved, lintIssues } = createResolvedMeta(
+        input,
+        context,
+        defaults,
+    );
+
+    if (lintIssues.length > 0) {
+        for (const issue of lintIssues) {
+            const prefix =
+                issue.level === "error" ? "⨯ [SEO Error]" : "⚠ [SEO Warning]";
+            const routeInfo = issue.routeKey
+                ? ` (Route: ${issue.routeKey})`
+                : "";
+            const msg = `${prefix} ${issue.message}${routeInfo}`;
+            if (issue.level === "error") {
+                console.error(msg);
+            } else {
+                console.warn(msg);
+            }
+        }
+    }
+
     return {
         title: resolved.title,
         description: resolved.description,

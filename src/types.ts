@@ -76,6 +76,9 @@ export type ResolvedMeta = {
 };
 
 export type LintIssueCode =
+    | "missing_title"
+    | "missing_description"
+    | "missing_opengraph"
     | "missing_canonical"
     | "missing_og_image"
     | "title_too_long"
