@@ -2,7 +2,7 @@
 
 [![npm version](https://img.shields.io/npm/v/@avenra/metadatax)](https://www.npmjs.com/package/@avenra/metadatax)
 [![license](https://img.shields.io/npm/l/@avenra/metadatax)](./LICENSE)
-[![CI](https://img.shields.io/github/actions/workflow/status/avenra/metadatax/ci.yml?branch=main)](https://github.com/avenra/metadatax/actions/workflows/ci.yml)
+[![CI](https://img.shields.io/github/actions/workflow/status/devsam7t3/metadatax/ci.yml?branch=main)](https://github.com/devsam7t3/metadatax/actions/workflows/ci.yml)
 
 Production-ready SEO and metadata utilities for Next.js and React with a single API surface.
 
