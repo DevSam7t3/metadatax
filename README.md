@@ -33,6 +33,7 @@ Production-ready SEO and metadata utilities for Next.js and React with a single 
 
 - App Router and default exports: `@avenra/metadatax`
 - Pages Router exports: `@avenra/metadatax/pages`
+- Next.js build plugin: `@avenra/metadatax/next-plugin`
 
 ## Installation
 
@@ -50,6 +51,9 @@ import { defineSeoConfig } from "@avenra/metadatax";
 
 export const seo = defineSeoConfig({
     baseUrl: "https://example.com",
+    title: "Example Site",
+    description: "Production-ready metadata defaults.",
+    canonical: "/",
     titleTemplate: "%s | Example",
     openGraph: {
         type: "website",
@@ -60,8 +64,26 @@ export const seo = defineSeoConfig({
         descriptionFromContent: true,
     },
     lint: {
-        strict: false,
+        strict: true,
+        rules: {
+            titleLength: 100,
+            duplicate_title: "warn",
+        },
     },
+});
+```
+
+```mjs
+// next.config.mjs
+import { withMetadataX } from "@avenra/metadatax/next-plugin";
+
+/** @type {import('next').NextConfig} */
+const nextConfig = {
+    reactStrictMode: true,
+};
+
+export default withMetadataX(nextConfig, {
+    failOn: "error",
 });
 ```
 
@@ -122,6 +144,10 @@ export default function AboutPage() {
 - `organizationJsonLd`
 - `productJsonLd`
 
+### Plugin Exports (`@avenra/metadatax/next-plugin`)
+
+- `withMetadataX`
+
 ### Pages Exports (`@avenra/metadatax/pages`)
 
 - `defineSeoConfig`
@@ -148,6 +174,8 @@ Stores and returns global runtime config.
 | `auto`          | `AutoConfig`                         | No       | Smart defaults controls.                      |
 | `lint`          | `LintConfig`                         | No       | Dev lint behavior controls.                   |
 
+When `lint.strict` is set to `true`, `title`, `description`, `canonical`, and `openGraph` become required in config typing.
+
 #### `AutoConfig`
 
 | Prop                     | Type                           | Required | Notes                                               |
@@ -159,9 +187,36 @@ Stores and returns global runtime config.
 
 #### `LintConfig`
 
-| Prop     | Type      | Required | Notes                                       |
-| -------- | --------- | -------- | ------------------------------------------- |
-| `strict` | `boolean` | No       | Upgrades lint level from `warn` to `error`. |
+| Prop     | Type        | Required | Notes                                                       |
+| -------- | ----------- | -------- | ----------------------------------------------------------- |
+| `strict` | `boolean`   | No       | Default level fallback. `true` elevates unconfigured rules. |
+| `rules`  | `LintRules` | No       | Per-rule override map and threshold controls.               |
+
+`LintRules` supports issue-level overrides: `missing_title`, `missing_description`, `missing_opengraph`, `missing_canonical`, `missing_og_image`, `title_too_long`, and `duplicate_title`.
+
+Rule values:
+
+- `"warn"` to force warning level
+- `"error"` to force error level
+- `false` to disable a rule
+
+Special threshold rule:
+
+- `titleLength: number | false` (`60` by default)
+
+### `withMetadataX(nextConfig, options?)`
+
+Wraps Next.js config and injects build-time lint fail mode.
+
+| Prop      | Type                                     | Required | Notes                                           |
+| --------- | ---------------------------------------- | -------- | ----------------------------------------------- |
+| `options` | `{ failOn?: "error"\|"warning"\|"all" }` | No       | Build failure threshold. Defaults to `"error"`. |
+
+Fail mode behavior:
+
+- `error`: fail build on lint issues with `level === "error"`
+- `warning`: fail build on warnings and errors
+- `all`: fail build on any lint issue
 
 ### `defineSeoDefaults(config)`
 
@@ -312,6 +367,8 @@ Current dev lint checks:
 - `missing_og_image`
 - `title_too_long` (over 60 chars)
 - `duplicate_title` (best-effort dev route registry)
+
+Each check can be overridden or disabled through `lint.rules`.
 
 ## Example App
 

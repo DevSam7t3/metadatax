@@ -2,6 +2,26 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.2.0] - 2026-04-15
+
+### Added
+
+- Granular lint rule configuration via `lint.rules`.
+- Per-rule severity overrides (`warn`/`error`) and rule disabling (`false`).
+- Configurable title length lint threshold with `lint.rules.titleLength`.
+- Next.js plugin entry point: `@avenra/metadatax/next-plugin`.
+- `withMetadataX(nextConfig, { failOn })` with fail modes `error`, `warning`, and `all`.
+- Plugin tests for fail mode injection and webpack composition.
+
+### Changed
+
+- `defineSeoConfig` strict mode now provides stronger typing: when `lint.strict` is `true`, required defaults are enforced for `title`, `description`, `canonical`, and `openGraph`.
+- Lint engine now resolves issue levels per rule and supports disabled checks.
+
+### Fixed
+
+- Production build lint escalation now runs when plugin fail mode is configured, enabling build-time enforcement of SEO lint policies.
+
 ## [0.1.1] - 2026-04-15
 
 ### Added

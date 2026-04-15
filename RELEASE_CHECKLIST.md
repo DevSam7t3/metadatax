@@ -25,6 +25,18 @@ cd apps/nextjs-example
 npm run build
 ```
 
+- [ ] Verify publish payload:
+
+```bash
+npm pack --dry-run
+```
+
+- [ ] Run full release gate:
+
+```bash
+npm run release:check
+```
+
 ## Documentation
 
 - [ ] README reflects current API exports

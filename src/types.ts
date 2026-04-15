@@ -45,17 +45,59 @@ export type AutoConfig = {
     contentExtractor?: (ctx: ResolveContext) => string | undefined;
 };
 
-export type LintConfig = {
-    strict?: boolean;
+export type LintIssueCode =
+    | "missing_title"
+    | "missing_description"
+    | "missing_opengraph"
+    | "missing_canonical"
+    | "missing_og_image"
+    | "title_too_long"
+    | "duplicate_title";
+
+export type LintRuleLevel = "warn" | "error" | false;
+
+export type BuildFailMode = "error" | "warning" | "all";
+
+export type LintRules = Partial<Record<LintIssueCode, LintRuleLevel>> & {
+    titleLength?: number | false;
 };
 
-export type SeoConfig = MetaInput & {
+export type LintConfig = {
+    strict?: boolean;
+    rules?: LintRules;
+};
+
+export type StrictMetaInput = MetaInput &
+    Required<
+        Pick<MetaInput, "title" | "description" | "canonical" | "openGraph">
+    >;
+
+type SeoConfigShared = {
     baseUrl?: string;
     titleTemplate?: string;
     defaultTitle?: string;
     auto?: AutoConfig;
-    lint?: LintConfig;
 };
+
+type StrictLintConfig = LintConfig & {
+    strict: true;
+};
+
+type NonStrictLintConfig = LintConfig & {
+    strict?: false | undefined;
+};
+
+type StrictSeoConfig = StrictMetaInput &
+    SeoConfigShared & {
+        lint: StrictLintConfig;
+    };
+
+type NonStrictSeoConfig = MetaInput &
+    SeoConfigShared & {
+        lint?: NonStrictLintConfig;
+    };
+
+export type SeoConfig = StrictSeoConfig | NonStrictSeoConfig;
 
 export type ResolveContext = {
     pathname?: string;
@@ -74,15 +116,6 @@ export type ResolvedMeta = {
     twitter?: TwitterInput;
     jsonLd?: JsonLdNode[];
 };
-
-export type LintIssueCode =
-    | "missing_title"
-    | "missing_description"
-    | "missing_opengraph"
-    | "missing_canonical"
-    | "missing_og_image"
-    | "title_too_long"
-    | "duplicate_title";
 
 export type LintIssue = {
     code: LintIssueCode;

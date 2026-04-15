@@ -12,11 +12,15 @@ export {
     productJsonLd,
 } from "./structured-data";
 export type {
+    BuildFailMode,
+    LintConfig,
     MetaInput,
     SeoConfig,
+    StrictMetaInput,
     ResolveContext,
     ResolvedMeta,
     LintIssue,
+    LintRules,
     NextMetadataLike,
     JsonLdNode,
 } from "./types";

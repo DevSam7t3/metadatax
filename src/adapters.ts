@@ -3,6 +3,7 @@ import { resolveMeta } from "./core/resolve";
 import { validateMeta } from "./core/lint";
 import { toHeadEntries } from "./core/serialize";
 import type {
+    BuildFailMode,
     HeadEntry,
     LintIssue,
     MetaInput,
@@ -11,6 +12,36 @@ import type {
     SeoConfig,
 } from "./types";
 
+declare const __METADATAX_FAIL_ON__: string | undefined;
+
+function normalizeFailMode(value?: string): BuildFailMode | undefined {
+    if (!value) return undefined;
+    if (value === "error" || value === "warning" || value === "all") {
+        return value;
+    }
+    return undefined;
+}
+
+function selectBuildFatalIssues(
+    lintIssues: LintIssue[],
+    failOn: BuildFailMode | undefined,
+): LintIssue[] {
+    if (!failOn) return [];
+    if (failOn === "all") return lintIssues;
+    if (failOn === "warning") return lintIssues;
+    return lintIssues.filter((issue) => issue.level === "error");
+}
+
+function readBuildFailMode(): BuildFailMode | undefined {
+    if (typeof __METADATAX_FAIL_ON__ === "undefined") return undefined;
+    return normalizeFailMode(__METADATAX_FAIL_ON__);
+}
+
+function shouldRunLint(context: ResolveContext): boolean {
+    if (context.env !== "production") return true;
+    return readBuildFailMode() !== undefined;
+}
+
 export function createResolvedMeta(
     input: MetaInput,
     context: ResolveContext = {},
@@ -18,10 +49,9 @@ export function createResolvedMeta(
 ) {
     const cfg = defaults ?? getGlobalSeoConfig();
     const resolved = resolveMeta(input, cfg, context);
-    const lintIssues =
-        context.env === "production"
-            ? []
-            : validateMeta(resolved, cfg.lint, context);
+    const lintIssues = shouldRunLint(context)
+        ? validateMeta(resolved, cfg.lint, context)
+        : [];
     return { resolved, lintIssues };
 }
 
@@ -50,6 +80,19 @@ export function createMetadata(
                 console.warn(msg);
             }
         }
+    }
+
+    const fatalIssues = selectBuildFatalIssues(lintIssues, readBuildFailMode());
+    if (fatalIssues.length > 0) {
+        const detail = fatalIssues
+            .map((issue) => {
+                const routeInfo = issue.routeKey ? ` (${issue.routeKey})` : "";
+                return `${issue.code}${routeInfo}: ${issue.message}`;
+            })
+            .join("; ");
+        throw new Error(
+            `[MetadataX] Build failed due to SEO lint issues: ${detail}`,
+        );
     }
 
     return {
