@@ -16,6 +16,7 @@ Production-ready SEO and metadata utilities for Next.js and React with a single 
 - [Smart Defaults Behavior](#smart-defaults-behavior)
 - [SEO Linting Rules](#seo-linting-rules)
 - [Example App](#example-app)
+- [Migration Guide](#migration-guide)
 - [Contributing](#contributing)
 - [Security](#security)
 - [License](#license)
@@ -117,6 +118,9 @@ export default function AboutPage() {
 - `Meta`
 - `JsonLd`
 - `articleJsonLd`
+- `breadcrumbJsonLd`
+- `organizationJsonLd`
+- `productJsonLd`
 
 ### Pages Exports (`@avenra/metadatax/pages`)
 
@@ -248,6 +252,49 @@ Structured helper for article schema data.
 | `image`         | `string` | No       | Image URL.                    |
 | `url`           | `string` | No       | Canonical article URL.        |
 
+### `breadcrumbJsonLd(input)`
+
+Structured helper for breadcrumb schema data.
+
+| Prop             | Type                 | Required | Notes                                 |
+| ---------------- | -------------------- | -------- | ------------------------------------- |
+| `items`          | `BreadcrumbItem[]`   | No       | Single breadcrumb trail.              |
+| `multipleTrails` | `BreadcrumbItem[][]` | No       | Multiple trails, emitted as `@graph`. |
+
+`BreadcrumbItem`
+
+| Prop   | Type     | Required | Notes                    |
+| ------ | -------- | -------- | ------------------------ |
+| `name` | `string` | Yes      | Breadcrumb display name. |
+| `item` | `string` | No       | URL for breadcrumb item. |
+
+### `organizationJsonLd(input)`
+
+Structured helper for organization schema data.
+
+| Prop           | Type                                                           | Required | Notes                     |
+| -------------- | -------------------------------------------------------------- | -------- | ------------------------- |
+| `name`         | `string`                                                       | Yes      | Organization name.        |
+| `type`         | `"Organization" \| "OnlineStore"`                              | No       | Schema type override.     |
+| `url`          | `string`                                                       | No       | Organization URL.         |
+| `logo`         | `string`                                                       | No       | Organization logo URL.    |
+| `description`  | `string`                                                       | No       | Organization description. |
+| `sameAs`       | `string[]`                                                     | No       | Social/profile URLs.      |
+| `contactPoint` | `{ contactType?: string; telephone?: string; email?: string }` | No       | Contact point details.    |
+
+### `productJsonLd(input)`
+
+Structured helper for product schema data.
+
+| Prop          | Type                                                                                      | Required | Notes                              |
+| ------------- | ----------------------------------------------------------------------------------------- | -------- | ---------------------------------- |
+| `name`        | `string`                                                                                  | Yes      | Product name.                      |
+| `description` | `string`                                                                                  | No       | Product description.               |
+| `image`       | `string \| string[]`                                                                      | No       | Product image URL(s).              |
+| `sku`         | `string`                                                                                  | No       | Product SKU.                       |
+| `brand`       | `string`                                                                                  | No       | Brand name, emitted as `Brand`.    |
+| `offers`      | `{ price: number \| string; priceCurrency: string; availability?: string; url?: string }` | No       | Offer details, emitted as `Offer`. |
+
 ## Smart Defaults Behavior
 
 - `titleFromPath` derives from route/path segment:
@@ -275,6 +322,12 @@ cd apps/nextjs-example
 npm install
 npm run dev
 ```
+
+## Migration Guide
+
+If you are moving from `next-seo`, use the migration document:
+
+- `docs/migrating-from-next-seo.md`
 
 ## Contributing
 

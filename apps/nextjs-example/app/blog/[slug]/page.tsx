@@ -1,5 +1,10 @@
 import type { Metadata } from "next";
-import { JsonLd, articleJsonLd, createMetadata } from "@avenra/metadatax";
+import {
+    JsonLd,
+    articleJsonLd,
+    breadcrumbJsonLd,
+    createMetadata,
+} from "@avenra/metadatax";
 import { seo } from "../../../seo.config";
 
 type PageProps = {
@@ -17,34 +22,31 @@ export async function generateMetadata({
     params,
 }: PageProps): Promise<Metadata> {
     const { slug } = await params;
-    const title = humanizeSlug(slug);
 
-    return createMetadata(
-        seo,
-        {
-            // title,
-            canonical: `/blog/${slug}`,
-            openGraph: {
-                type: "article",
-                url: `/blog/${slug}`,
-                images: [{ url: `/og/${slug}.png` }],
-            },
-            // description: `${title} article page generated in the example app.`,
+    return createMetadata(seo, {
+        title: humanizeSlug(slug),
+        canonical: `/blog/${slug}`,
+        openGraph: {
+            type: "article",
+            images: [{ url: `/og/${slug}.png` }],
         },
-        {
-            pathname: `/blog/${slug}`,
-            routeKey: `/blog/${slug}`,
-            env: "development",
-        },
-    );
+    });
 }
 
 export default async function BlogPostPage({ params }: PageProps) {
     const { slug } = await params;
     const title = humanizeSlug(slug);
+    const breadcrumb = breadcrumbJsonLd({
+        items: [
+            { name: "Home", item: "https://example.com" },
+            { name: "Blog", item: "https://example.com/blog" },
+            { name: title, item: `https://example.com/blog/${slug}` },
+        ],
+    });
 
     return (
         <main>
+            <JsonLd data={breadcrumb} />
             <JsonLd
                 data={articleJsonLd({
                     headline: title,

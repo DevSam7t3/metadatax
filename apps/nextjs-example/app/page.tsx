@@ -5,15 +5,23 @@ export default function HomePage() {
         <main>
             <h1>MetadataX Next.js Example</h1>
             <p>
-                This route inherits defaults from defineSeoConfig and layout
-                metadata.
+                This app shows clean App Router integration using a single
+                `seo.config.ts` and route-level `generateMetadata`.
             </p>
-            <p>
-                Open the dynamic blog page to see route metadata and JSON-LD in
-                action:
-                <br />
-                <Link href="/blog/my-first-post">/blog/my-first-post</Link>
-            </p>
+            <ul>
+                <li>
+                    <Link href="/blog/my-first-post">Blog article example</Link>
+                    : article + breadcrumb JSON-LD.
+                </li>
+                <li>
+                    <Link href="/products/metadatax-pro">Product example</Link>:
+                    product + breadcrumb JSON-LD.
+                </li>
+                <li>
+                    <Link href="/about">About example</Link>: organization
+                    JSON-LD.
+                </li>
+            </ul>
         </main>
     );
 }

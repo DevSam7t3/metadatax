@@ -5,7 +5,12 @@ export {
     createResolvedMeta,
 } from "./adapters";
 export { Meta, JsonLd } from "./react";
-export { articleJsonLd } from "./structured-data";
+export {
+    articleJsonLd,
+    breadcrumbJsonLd,
+    organizationJsonLd,
+    productJsonLd,
+} from "./structured-data";
 export type {
     MetaInput,
     SeoConfig,
